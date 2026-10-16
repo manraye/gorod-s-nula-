@@ -1,217 +1,151 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#101923">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Город с нуля</title>
 <style>
-:root{--panel:rgba(15,24,34,.91);--line:rgba(255,255,255,.13);--text:#f4f7fb;--muted:#aebbc9;--accent:#69d4b2;--gold:#ffd166}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#8ec6d1;color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overscroll-behavior:none;touch-action:none}
-body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-#game{position:fixed;inset:0;overflow:hidden}canvas{display:block;width:100%;height:100%;touch-action:none}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(12px);box-shadow:0 8px 24px #07111b30}
-#top{position:absolute;top:calc(env(safe-area-inset-top) + 8px);left:8px;right:8px;display:flex;align-items:center;gap:7px;padding:8px;z-index:4}
-.brand{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.06em}.metric{min-width:0;flex:1}.metric strong{display:block;font-size:14px;white-space:nowrap}.metric small{display:block;font-size:10px;color:var(--muted);white-space:nowrap}
-button,select{font:inherit;color:var(--text);border:1px solid var(--line);background:#253544;border-radius:10px;min-height:44px;min-width:44px;padding:7px 10px;touch-action:manipulation}
-button:active{transform:scale(.97);filter:brightness(1.2)}button.active{background:#197c6a;border-color:#6be2c3}
-#speed{display:flex;gap:3px}#speed button{min-width:38px;padding:5px}
-#rci{position:absolute;left:8px;top:100px;z-index:3;padding:9px 8px;width:47px;display:grid;gap:8px;text-align:center}
-.rcirow{font-size:10px;font-weight:800}.bar{height:64px;width:12px;background:#ffffff20;border-radius:7px;margin:4px auto 0;display:flex;align-items:end;overflow:hidden}.fill{width:100%;height:40%;border-radius:7px;transition:height .3s}
-#news{position:absolute;top:100px;left:64px;right:8px;z-index:2;padding:8px 11px;font-size:11px;color:#e4edf4;min-height:34px}
-#bottom{position:absolute;left:8px;right:8px;bottom:calc(env(safe-area-inset-bottom) + 8px);z-index:5;padding:8px}
-#tools{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:6px;touch-action:pan-x}#tools::-webkit-scrollbar{display:none}
-.tool{flex:0 0 auto;font-size:11px;min-height:44px;padding:7px 11px;white-space:nowrap}
-#cards{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:3px 0 1px;touch-action:pan-x}#cards button{flex:0 0 108px;text-align:left;font-size:11px;line-height:1.3;min-height:62px}
-#cards button b{display:block;font-size:12px}#cards button small{color:#b8c6d4}
-#hint{position:absolute;left:64px;right:8px;bottom:205px;z-index:2;text-align:center;font-size:11px;color:#fff;text-shadow:0 1px 4px #123;pointer-events:none}
-#modal{position:absolute;z-index:8;left:12px;right:12px;top:50%;transform:translateY(-50%);max-height:72%;overflow:auto;padding:16px;display:none}
-#modal h2{font-size:18px;margin:0 0 8px}#modal p{font-size:13px;line-height:1.5;color:#d2dce6;margin:7px 0}#modal .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-#modal .actions button{flex:1}
-#toast{position:absolute;left:50%;top:23%;transform:translateX(-50%);z-index:9;background:#10202ddd;border:1px solid var(--line);padding:10px 14px;border-radius:12px;font-size:12px;display:none;max-width:90%;text-align:center}
-#legend{position:absolute;right:8px;top:100px;z-index:2;font-size:10px;color:#fff;text-shadow:0 1px 3px #123;text-align:right;pointer-events:none}
-@media (orientation:landscape){#top{max-width:680px}#bottom{left:70px;right:70px}#rci{top:90px}#news{top:90px;max-width:380px}#hint{bottom:175px}#cards button{flex-basis:125px}}
+:root{--bg:#101923;--panel:#172431;--panel2:#223443;--line:#354b5d;--text:#f1f7fb;--muted:#a9bdca;--green:#27c69a;--blue:#57a8f5;--gold:#ffc85a;--red:#ff7777}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:manipulation}
+#game{position:fixed;inset:0;background:linear-gradient(#b7d8e2,#d8e8e8)}canvas{display:block;width:100%;height:100%;touch-action:none}
+.top{position:fixed;top:env(safe-area-inset-top,8px);left:10px;right:10px;z-index:5;padding:11px 12px;background:rgba(16,27,39,.94);border:1px solid #3b5264;border-radius:17px;box-shadow:0 8px 28px #0003}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-weight:850;font-size:16px;letter-spacing:.3px;line-height:1.1}.sub{font-size:11px;color:var(--muted);margin-top:3px}.stats{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:9px}.stat{background:#223443;border:1px solid #344b5d;border-radius:10px;padding:5px 8px;min-width:70px}.stat small{display:block;color:var(--muted);font-size:10px}.stat b{font-size:14px}.controls{display:flex;gap:5px}.iconbtn{border:1px solid #40576a;background:#263949;color:white;border-radius:10px;padding:9px 10px;font-size:14px;font-weight:700;min-width:37px}
+#balance.negative{color:var(--red)}.hint{position:fixed;z-index:3;left:50%;top:43%;transform:translate(-50%,-50%);padding:8px 12px;border-radius:12px;background:#14212bc9;color:#fff;font-size:12px;text-align:center;white-space:normal;width:max-content;max-width:82%;pointer-events:none}
+.bottom{position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);z-index:5;background:rgba(16,27,39,.96);border:1px solid #3b5264;border-radius:18px;padding:9px;box-shadow:0 8px 28px #0004}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:8px}.tabs::-webkit-scrollbar{display:none}.tab{flex:0 0 auto;background:#243646;color:#dce8ef;border:1px solid #40576a;border-radius:11px;padding:10px 12px;font-weight:700;font-size:12px}.tab.active{background:#147e6a;border-color:#35d7b2;color:white}
+.items{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.item{min-width:0;text-align:left;background:#223443;border:1px solid #3b5264;color:white;border-radius:12px;padding:9px 8px;min-height:74px}.item b{display:block;font-size:12px;line-height:1.2}.item small{display:block;color:#b5c8d3;font-size:10px;margin-top:6px;line-height:1.2}.item:disabled{opacity:.4}.item.selected{border:2px solid var(--green);background:#176e61}
+#toast{position:fixed;z-index:10;left:50%;top:45%;transform:translate(-50%,-50%);background:#101b27f2;border:1px solid #506a7b;border-radius:12px;padding:12px 16px;max-width:85%;text-align:center;display:none;box-shadow:0 8px 30px #0005}
+.modal{position:fixed;inset:0;z-index:20;background:#071019b8;display:none;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.dialog{width:min(440px,100%);max-height:82vh;overflow:auto;background:#172431;border:1px solid #41586a;border-radius:18px;padding:18px}.dialog h2{margin:0 0 10px;font-size:20px}.dialog p{color:#c0d0d9;font-size:13px;line-height:1.45}.dialog button{margin:4px 4px 0 0}.wide{width:100%;padding:12px!important;margin-top:8px!important}.legend{font-size:11px;color:var(--muted);margin-top:7px}
+@media(min-width:700px){.top{left:18px;right:18px;max-width:720px}.bottom{left:18px;right:18px;max-width:720px;margin:auto}.brand{font-size:18px}.items{grid-template-columns:repeat(4,minmax(0,1fr))}.item{min-height:82px}.item b{font-size:13px}}
 </style>
 </head>
 <body>
-<div id="game">
-  <div id="top" class="panel">
-    <div class="metric"><div class="brand">🏙 ГОРОД С НУЛЯ</div><strong id="money">₡ 12 000</strong><small id="balance">Баланс +₡0/мес.</small></div>
-    <div class="metric"><strong id="population">👥 0</strong><small>население</small></div>
-    <div class="metric"><strong id="date">Май, год 1</strong><small id="clock">08:00</small></div>
-    <div id="speed"><button data-speed="0">Ⅱ</button><button data-speed="1" class="active">▶</button><button data-speed="2">×2</button><button data-speed="3">×3</button></div>
-    <button id="settings" aria-label="Настройки">⚙</button>
-  </div>
-  <div id="rci" class="panel">
-    <div class="rcirow" style="color:#75e59a">Ж<small> спрос</small><div class="bar"><div id="r" class="fill" style="background:#4de184"></div></div></div>
-    <div class="rcirow" style="color:#68baff">К<small> спрос</small><div class="bar"><div id="c" class="fill" style="background:#4ba9ff"></div></div></div>
-    <div class="rcirow" style="color:#ffd36a">П<small> спрос</small><div class="bar"><div id="i" class="fill" style="background:#ffc447"></div></div></div>
-  </div>
-  <div id="news" class="panel">📣 Совет мэра: построй дорогу, затем жилую зону рядом с ней.</div>
-  <div id="legend">Проведи пальцем по карте<br>чтобы двигать камеру</div>
-  <div id="hint">Выбери инструмент внизу • щипок — масштаб • два пальца — поворот</div>
-  <div id="bottom" class="panel">
-    <div id="tools"></div>
-    <div id="cards"></div>
-  </div>
-  <div id="modal" class="panel"></div><div id="toast"></div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<div id="game"></div>
+<header class="top">
+ <div class="topline">
+  <div><div class="brand">🏙️ ГОРОД С НУЛЯ</div><div class="sub" id="dateLine">Новый город · День 1</div></div>
+  <div class="controls"><button class="iconbtn" id="pauseBtn" aria-label="Пауза">Ⅱ</button><button class="iconbtn" id="speedBtn">×1</button><button class="iconbtn" id="settingsBtn">⚙</button></div>
+ </div>
+ <div class="stats">
+  <div class="stat"><small>Бюджет</small><b id="balance">₡ 12 000</b></div>
+  <div class="stat"><small>Население</small><b id="population">0</b></div>
+  <div class="stat"><small>Доход / мес.</small><b id="income">₡ 0</b></div>
+ </div>
+</header>
+<div class="hint" id="hint">Выбери здание снизу, затем коснись свободной клетки</div>
+<div id="toast"></div>
+<section class="bottom">
+ <div class="tabs" id="tabs">
+  <button class="tab active" data-cat="roads">🛣️ Дороги</button>
+  <button class="tab" data-cat="homes">🏠 Жильё</button>
+  <button class="tab" data-cat="services">⚡ Службы</button>
+  <button class="tab" data-cat="parks">🌳 Услуги</button>
+ </div>
+ <div class="items" id="items"></div>
+ <div class="legend" id="legend">Касайся карты, чтобы строить. Перетаскивай пальцем, чтобы осмотреть город.</div>
+</section>
+<div class="modal" id="modal"><div class="dialog"><h2 id="modalTitle">Настройки</h2><div id="modalBody"></div><button class="iconbtn wide" id="closeModal">Закрыть</button></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-(()=>{'use strict';
-// ─── Конфигурация и данные игры ──────────────────────────────────────────────
-const SAVE_KEY='city_from_zero_v1';
-const W=44,H=44,CELL=2;
-const TYPES={
- road:{name:'Улица',price:35,maint:1,kind:'road',color:0x505b66},
- dirt:{name:'Грунтовка',price:15,maint:.3,kind:'road',color:0x987b59},
- avenue:{name:'Проспект',price:75,maint:2,kind:'road',color:0x3d4854},
- res:{name:'Жилая зона',price:18,kind:'zone',color:0x48b66a},
- com:{name:'Коммерческая зона',price:22,kind:'zone',color:0x438edb},
- ind:{name:'Промышленная зона',price:20,kind:'zone',color:0xd7a83c},
- office:{name:'Офисная зона',price:28,kind:'zone',color:0x37bfc2},
- power:{name:'Солнечная станция',price:1200,maint:45,kind:'service',power:80,water:0,desc:'Производит 80 единиц электричества.'},
- water:{name:'Водонапорная башня',price:850,maint:30,kind:'service',power:0,water:100,desc:'Обеспечивает город чистой водой.'},
- park:{name:'Городской парк',price:500,maint:15,kind:'service',power:0,water:0,desc:'Повышает счастье жителей поблизости.'},
- fire:{name:'Пожарная часть',price:950,maint:35,kind:'service',power:5,water:5,desc:'Снижает риск серьёзных пожаров.'},
- school:{name:'Школа',price:1100,maint:40,kind:'service',power:8,water:5,desc:'Повышает образование жителей.'}
-};
-const CATEGORIES=[
- ['roads','🛣 Дороги',['road','dirt','avenue','bulldoze']],
- ['zones','🏘 Зонирование',['res','com','ind','office']],
- ['utilities','⚡ Коммунальные',['power','water']],
- ['services','🌳 Услуги',['park','fire','school']],
- ['city','🏙 Город',['budget','save','load','new']]
-];
-const state={money:12000,day:1,month:5,year:1,hour:8,speed:1,pop:0,happiness:72,taxes:{res:9,com:10,ind:11},roads:[],zones:[],buildings:[],selected:null,tool:'road',category:'roads',demand:{res:70,com:45,ind:55},news:[],serial:1};
-const key=(x,z)=>x+','+z, clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-let scene,camera,renderer,world,ground,waterMesh,raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
-let meshes=new Map(),roadMeshes=new Map(),zoneMeshes=new Map(),buildingMeshes=new Map(),effects=[];
-let dragging=null,lastTouch=null,pinchDist=0,camYaw=Math.PI/4,camZoom=65,camTarget=new THREE.Vector3(0,0,0),velX=0,velZ=0;
-let activeCategory='roads',activeTool='road',selectedObject=null,simAccum=0,autosave=0,dayLight=0.7;
+(()=> {
+'use strict';
 const $=id=>document.getElementById(id);
-function toast(msg){const el=$('toast');el.textContent=msg;el.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>el.style.display='none',2100)}
-function addNews(msg){state.news.unshift(msg);state.news=state.news.slice(0,5);$('news').textContent='📣 '+msg}
-function format(n){return Math.round(n).toLocaleString('ru-RU')}
-function mat(color,rough=.82){return new THREE.MeshStandardMaterial({color,roughness:rough})}
-function box(w,h,d,color,x,y,z,group,opts={}){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(color));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;group.add(m);return m}
-function cylinder(rt,rb,h,color,x,y,z,group,seg=10){const m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg),mat(color));m.position.set(x,y,z);m.castShadow=true;group.add(m);return m}
-function sphere(r,color,x,y,z,group){const m=new THREE.Mesh(new THREE.SphereGeometry(r,10,8),mat(color));m.position.set(x,y,z);m.castShadow=true;group.add(m);return m}
-function groupAt(x,a,b){const g=new THREE.Group();if(b===undefined)g.position.set(x,0,a);else g.position.set(x,a,b);scene.add(g);return g}
-function gridPos(x,z){return {x:clamp(Math.round(x/CELL+W/2),0,W-1),z:clamp(Math.round(z/CELL+H/2),0,H-1)}}
-function worldPos(x,z){return {x:(x-W/2)*CELL,z:(z-H/2)*CELL}}
-function seeded(x,z){const v=Math.sin(x*127.1+z*311.7)*43758.5453;return v-Math.floor(v)}
-// ─── World / Map: ландшафт, озеро, лес ──────────────────────────────────────
-function init3D(){
- scene=new THREE.Scene();scene.background=new THREE.Color(0x91cbdc);scene.fog=new THREE.Fog(0x91cbdc,80,190);
- camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,500);
- renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});
- renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.setSize(innerWidth,innerHeight);renderer.outputEncoding=THREE.sRGBEncoding;
- renderer.shadowMap.enabled=false;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;
- $('game').prepend(renderer.domElement);
- scene.add(new THREE.HemisphereLight(0xe4f7ff,0x53664a,1.35));
- const sun=new THREE.DirectionalLight(0xfff0d2,2);sun.position.set(-35,60,-20);scene.add(sun);
- world=new THREE.Group();scene.add(world);
- // Рельеф — отдельные плитки с мягкими перепадами высоты
- const geo=new THREE.PlaneGeometry(CELL,CELL,1,1);geo.rotateX(-Math.PI/2);
- for(let x=0;x<W;x++)for(let z=0;z<H;z++){
-   const p=worldPos(x,z),n=seeded(x,z),lake=((x-31)/7)**2+((z-14)/10)**2<1;
-   let y=(n-.5)*.35+Math.sin(x*.25)*.12+Math.cos(z*.22)*.1;
-   const color=lake?0x4ba9c9:(n>.84?0x83b968:n<.12?0x8cae65:0x75b96c);
-   const g=new THREE.Mesh(new THREE.PlaneGeometry(CELL,CELL),mat(color));g.rotation.x=-Math.PI/2;g.position.set(p.x,y,p.z);g.receiveShadow=true;world.add(g);
-   if(!lake&&n>.93&&x>3&&z>3&&x<W-3&&z<H-3&&!nearSpawn(x,z)){
-     const tree=groupAt(p.x,p.z);tree.position.y=y;
-     cylinder(.08,.13,.55,0x76513a,0,.28,0,tree,7);sphere(.42, n>.97?0x2f8550:0x3e9953,0,.78,0,tree);sphere(.28,0x58ae62,.16,1.03,.06,tree);
-   }
+const game=$('game');
+if(!window.THREE){$('hint').textContent='Не удалось загрузить 3D-библиотеку. Проверь интернет и обнови страницу.';return;}
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xb9d8e2);scene.fog=new THREE.Fog(0xb9d8e2,24,46);
+const camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,100);camera.position.set(12,17,20);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=false;renderer.outputEncoding=THREE.sRGBEncoding;game.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xeaf8ff,0x647d83,1.6));const sun=new THREE.DirectionalLight(0xfff1d3,1.5);sun.position.set(-8,18,10);scene.add(sun);
+const N=16,cell=1.45,half=(N-1)*cell/2;let city={money:12000,day:1,pop:0,paused:false,speed:1,cat:'roads',selected:'road',buildings:[],roads:[],lastTime:Date.now(),monthTimer:0};
+const defs={
+ road:{name:'Дорога',cat:'roads',cost:35,upkeep:1,icon:'🛣️',color:0x586975,type:'road'},
+ home:{name:'Жилой дом',cat:'homes',cost:550,upkeep:8,icon:'🏠',color:0xe6b777,type:'home',pop:8,tax:28},
+ apartment:{name:'Многоквартирный дом',cat:'homes',cost:1450,upkeep:22,icon:'🏢',color:0xe2a26c,type:'apartment',pop:24,tax:72},
+ solar:{name:'Солнечная станция',cat:'services',cost:850,upkeep:4,icon:'⚡',color:0x5c9ac4,type:'solar'},
+ water:{name:'Водонапорная башня',cat:'services',cost:700,upkeep:6,icon:'🚰',color:0x8ab7d0,type:'water'},
+ park:{name:'Городской парк',cat:'parks',cost:500,upkeep:7,icon:'🌳',color:0x54a66c,type:'park'},
+ school:{name:'Школа',cat:'parks',cost:1100,upkeep:20,icon:'🏫',color:0xe6d8ad,type:'school'},
+ fire:{name:'Пожарная часть',cat:'services',cost:950,upkeep:17,icon:'🚒',color:0xc95d55,type:'fire'}
+};
+const groundMat=new THREE.MeshLambertMaterial({color:0x9cb6a2}),tileMat=new THREE.MeshLambertMaterial({color:0xc6d9c7}),edgeMat=new THREE.LineBasicMaterial({color:0x839b91,transparent:true,opacity:.48});
+const grid=new THREE.Group();scene.add(grid);const tiles=[];
+for(let z=0;z<N;z++)for(let x=0;x<N;x++){
+ const xx=x*cell-half,zz=z*cell-half;
+ const base=new THREE.Mesh(new THREE.BoxGeometry(cell-.035,.12,cell-.035),tileMat);base.position.set(xx,-.08,zz);base.userData={x,z};grid.add(base);tiles.push(base);
+}
+const basePlane=new THREE.Mesh(new THREE.PlaneGeometry(N*cell+3,N*cell+3),groundMat);basePlane.rotation.x=-Math.PI/2;basePlane.position.y=-.16;scene.add(basePlane);
+// Border and simple nature outside the build grid
+const border=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(N*cell,.03,N*cell)),new THREE.LineBasicMaterial({color:0x678477}));border.position.y=-.01;scene.add(border);
+function tree(x,z){const g=new THREE.Group();const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.045,.07,.28,6),new THREE.MeshLambertMaterial({color:0x82634c}));trunk.position.y=.14;g.add(trunk);const crown=new THREE.Mesh(new THREE.ConeGeometry(.22,.5,7),new THREE.MeshLambertMaterial({color:0x4d9872}));crown.position.y=.48;g.add(crown);g.position.set(x,.01,z);scene.add(g);}
+for(let i=0;i<38;i++){let x=(Math.random()-.5)*(N*cell+4),z=(Math.random()-.5)*(N*cell+4);if(Math.abs(x)<half+1&&Math.abs(z)<half+1)continue;tree(x,z);}
+const objects=new Map(),occupied=new Map();let currentCat='roads';
+function coord(x,z){return {x:x*cell-half,z:z*cell-half};}
+function buildingMesh(kind,x,z){
+ const d=defs[kind],p=coord(x,z),g=new THREE.Group();g.position.set(p.x,0,p.z);
+ const mat=c=>new THREE.MeshLambertMaterial({color:c});
+ if(kind==='road'){
+  const slab=new THREE.Mesh(new THREE.BoxGeometry(cell-.05,.08,cell-.05),mat(0x465966));slab.position.y=.015;g.add(slab);
+  const line=new THREE.Mesh(new THREE.BoxGeometry(.52,.012,.045),mat(0xd7d7b7));line.position.y=.06;g.add(line);
+ }else if(kind==='park'){
+  const lawn=new THREE.Mesh(new THREE.BoxGeometry(cell-.08,.08,cell-.08),mat(0x78b87b));lawn.position.y=.02;g.add(lawn);
+  for(let i=0;i<3;i++){const t=new THREE.Group();const tr=new THREE.Mesh(new THREE.CylinderGeometry(.035,.05,.22,5),mat(0x82634c));tr.position.y=.16;t.add(tr);const cr=new THREE.Mesh(new THREE.SphereGeometry(.14,7,6),mat(0x3f9461));cr.position.y=.34;t.add(cr);t.position.set((i-1)*.35,.05,(i%2?-.22:.2));g.add(t);}
+ }else{
+  const w=cell*.72,depth=cell*.72,h=kind==='home'?.85:kind==='apartment'?1.55:kind==='water'?1.25:kind==='solar'?.3:kind==='school'?.65:.7;
+  if(kind==='solar'){
+   const panel=new THREE.Mesh(new THREE.BoxGeometry(.82,.08,.6),mat(0x2c5e85));panel.position.y=.18;g.add(panel);
+   for(let j=-1;j<=1;j++){const ln=new THREE.Mesh(new THREE.BoxGeometry(.82,.012,.018),mat(0xa8d6ef));ln.position.set(0,.23,j*.17);g.add(ln);}
+  }else if(kind==='water'){
+   const pole=new THREE.Mesh(new THREE.CylinderGeometry(.07,.1,.65,8),mat(0x7f9da8));pole.position.y=.33;g.add(pole);const tank=new THREE.Mesh(new THREE.CylinderGeometry(.28,.28,.45,10),mat(d.color));tank.position.y=.88;g.add(tank);
+  }else{
+   const body=new THREE.Mesh(new THREE.BoxGeometry(w,h,depth),mat(d.color));body.position.y=h/2+.04;g.add(body);
+   if(kind==='home'||kind==='apartment'){const roof=new THREE.Mesh(new THREE.ConeGeometry(.62,.42,4),mat(0x9b6b58));roof.rotation.y=Math.PI/4;roof.position.y=h+.24;g.add(roof);}
+   if(kind==='school'||kind==='fire'){const roof=new THREE.Mesh(new THREE.BoxGeometry(w+.08,.09,depth+.08),mat(kind==='fire'?0xa94343:0x6d8998));roof.position.y=h+.08;g.add(roof);}
+   const winmat=mat(0x8bd2e8);for(let j=-1;j<=1;j++){const win=new THREE.Mesh(new THREE.BoxGeometry(.11,.13,.025),winmat);win.position.set(j*.28,h*.58,depth/2+.014);g.add(win);}
+  }
  }
- // Озеро как гладкая поверхность поверх рельефа
- const lakeGeo=new THREE.CircleGeometry(13,48);lakeGeo.rotateX(-Math.PI/2);waterMesh=new THREE.Mesh(lakeGeo,new THREE.MeshStandardMaterial({color:0x3ba9d0,roughness:.28,metalness:.08}));waterMesh.position.set(worldPos(31,14).x,.02,worldPos(31,14).z);world.add(waterMesh);
- // Стартовая дорога и небольшой посёлок
- for(let x=17;x<=25;x++)placeRoad(x,24,'road',true);
- for(let z=21;z<=27;z++)placeRoad(21,z,'road',true);
- for(let x=17;x<26;x+=2)placeZone(x,22,'res',true);
- updateCamera();
+ g.traverse(o=>{if(o.isMesh){o.userData.gridX=x;o.userData.gridZ=z;}});scene.add(g);objects.set(x+','+z,g);return g;
 }
-function nearSpawn(x,z){return x>13&&x<29&&z>18&&z<30}
-function groundY(x,z){return (seeded(x,z)-.5)*.35+Math.sin(x*.25)*.12+Math.cos(z*.22)*.1}
-// ─── Camera + touch input ───────────────────────────────────────────────────
-function updateCamera(){const h=camZoom,dist=h/Math.sin(1.02);camera.position.set(camTarget.x+Math.sin(camYaw)*dist,h,camTarget.z+Math.cos(camYaw)*dist);camera.lookAt(camTarget);camera.updateProjectionMatrix()}
-function panCamera(dx,dy){const scale=camZoom*.0017;velX=-dx*scale;velZ=dy*scale;const c=Math.cos(camYaw),s=Math.sin(camYaw);camTarget.x+=(-dx*c+dy*s)*scale;camTarget.z+=(dx*s+dy*c)*scale;camTarget.x=clamp(camTarget.x,-42,42);camTarget.z=clamp(camTarget.z,-42,42);updateCamera()}
-function pickAt(clientX,clientY){pointer.x=clientX/innerWidth*2-1;pointer.y=-(clientY/innerHeight)*2+1;raycaster.setFromCamera(pointer,camera);const targets=[];scene.traverse(o=>{if(o.userData.pickable)targets.push(o)});const hits=raycaster.intersectObjects(targets,false);return hits.length?hits[0].object:null}
-let touchStart=null,moved=false,longTimer=null;
-rendererSafeEvents();
-function rendererSafeEvents(){
- const el=$('game');
- el.addEventListener('contextmenu',e=>e.preventDefault());
- el.addEventListener('touchstart',e=>{if(e.target.closest('button')||e.target.closest('#bottom')||e.target.closest('#modal'))return;if(e.touches.length===2){pinchDist=distance(e.touches[0],e.touches[1]);lastTouch={x:(e.touches[0].clientX+e.touches[1].clientX)/2,y:(e.touches[0].clientY+e.touches[1].clientY)/2};dragging='multi';clearTimeout(longTimer);return;}const t=e.touches[0];touchStart={x:t.clientX,y:t.clientY,time:Date.now()};lastTouch={x:t.clientX,y:t.clientY};moved=false;dragging='one';longTimer=setTimeout(()=>{if(!moved&&touchStart){const hit=pickAt(t.clientX,t.clientY);if(hit)showObject(hit.userData.ref);else toast('Пустой участок карты');}},620);},{passive:false});
- el.addEventListener('touchmove',e=>{if(e.target.closest('#bottom')||e.target.closest('#modal'))return;e.preventDefault();if(e.touches.length===2){const d=distance(e.touches[0],e.touches[1]),mid={x:(e.touches[0].clientX+e.touches[1].clientX)/2,y:(e.touches[0].clientY+e.touches[1].clientY)/2};if(pinchDist){camZoom=clamp(camZoom*pinchDist/d,28,105)}if(lastTouch)camYaw+=(mid.x-lastTouch.x)*.008;pinchDist=d;lastTouch=mid;updateCamera();moved=true;clearTimeout(longTimer);return;}if(dragging==='one'&&lastTouch){const t=e.touches[0],dx=t.clientX-lastTouch.x,dy=t.clientY-lastTouch.y;if(Math.abs(t.clientX-touchStart.x)+Math.abs(t.clientY-touchStart.y)>8){moved=true;clearTimeout(longTimer);if(activeTool==='road'||activeTool==='dirt'||activeTool==='avenue'||activeTool==='bulldoze'||['res','com','ind','office'].includes(activeTool)){const hit=pickGround(t.clientX,t.clientY);if(hit)paintAt(hit.x,hit.z);else panCamera(dx,dy)}else panCamera(dx,dy);}lastTouch={x:t.clientX,y:t.clientY};}},{passive:false});
- el.addEventListener('touchend',e=>{clearTimeout(longTimer);if(e.changedTouches.length&&touchStart&&!moved){const t=e.changedTouches[0],hit=pickAt(t.clientX,t.clientY);if(hit&&hit.userData.ref)showObject(hit.userData.ref);else{const gp=pickGround(t.clientX,t.clientY);if(gp)handleTap(gp.x,gp.z)}}dragging=null;touchStart=null;lastTouch=null;pinchDist=0;},{passive:false});
- // Поддержка мыши для тестирования на компьютере
- el.addEventListener('mousedown',e=>{if(e.target.closest('button')||e.target.closest('#bottom'))return;touchStart={x:e.clientX,y:e.clientY,time:Date.now()};lastTouch={x:e.clientX,y:e.clientY};moved=false;dragging='mouse';});
- window.addEventListener('mousemove',e=>{if(dragging!=='mouse'||!lastTouch)return;const dx=e.clientX-lastTouch.x,dy=e.clientY-lastTouch.y;if(Math.abs(e.clientX-touchStart.x)+Math.abs(e.clientY-touchStart.y)>5){moved=true;panCamera(dx,dy)}lastTouch={x:e.clientX,y:e.clientY}});
- window.addEventListener('mouseup',e=>{if(dragging==='mouse'&&touchStart&&!moved){const hit=pickAt(e.clientX,e.clientY);if(hit&&hit.userData.ref)showObject(hit.userData.ref);else{const gp=pickGround(e.clientX,e.clientY);if(gp)handleTap(gp.x,gp.z)}}dragging=null;touchStart=null;lastTouch=null});
- window.addEventListener('wheel',e=>{camZoom=clamp(camZoom+e.deltaY*.035,28,105);updateCamera()},{passive:true});
- window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio||1,2))});
+function addBuilding(kind,x,z,quiet=false){
+ const key=x+','+z;if(occupied.has(key)){if(!quiet)toast('Эта клетка уже занята');return false;}
+ const d=defs[kind];if(city.money<d.cost){if(!quiet)toast('Не хватает средств');return false;}
+ city.money-=d.cost;occupied.set(key,kind);city.buildings.push({kind,x,z});buildingMesh(kind,x,z);if(d.pop)city.pop+=d.pop;updateUI();if(!quiet)toast(d.name+' построен');return true;
 }
-function distance(a,b){return Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)}
-function pickGround(x,y){pointer.x=x/innerWidth*2-1;pointer.y=-(y/innerHeight)*2+1;raycaster.setFromCamera(pointer,camera);const plane=new THREE.Plane(new THREE.Vector3(0,1,0),0);const v=new THREE.Vector3();const ok=raycaster.ray.intersectPlane(plane,v);if(!ok)return null;const g=gridPos(v.x,v.z);return {x:g.x,z:g.z}}
-function handleTap(x,z){if(activeTool==='save'){saveGame();return}if(activeTool==='load'){loadGame();return}if(activeTool==='new'){if(confirm('Начать новый город? Текущий прогресс будет заменён.'))newGame();return}if(activeTool==='budget'){showBudget();return}if(activeTool==='bulldoze'){demolishAt(x,z);return}if(TYPES[activeTool]?.kind==='road'){placeRoad(x,z,activeTool);return}if(TYPES[activeTool]?.kind==='zone'){placeZone(x,z,activeTool);return}if(TYPES[activeTool]?.kind==='service'){placeBuilding(x,z,activeTool);return}toast('Выбери инструмент строительства внизу')}
-function paintAt(x,z){if(activeTool==='bulldoze')demolishAt(x,z);else if(TYPES[activeTool]?.kind==='road')placeRoad(x,z,activeTool);else if(TYPES[activeTool]?.kind==='zone')placeZone(x,z,activeTool)}
-// ─── Roads / Zoning / Buildings ─────────────────────────────────────────────
-function placeRoad(x,z,type,free=false){x=clamp(x,0,W-1);z=clamp(z,0,H-1);const k=key(x,z);if(state.roads.some(r=>r.k===k))return;if(!free&&!pay(TYPES[type].price))return;state.roads.push({k,x,z,type});const p=worldPos(x,z),g=groupAt(p.x,groundY(x,z)+.05,p.z);const width=type==='avenue'?1.7:1.25;const road=box(width,.12,1.95,TYPES[type].color,0,0,0,g);road.rotation.y=0;road.userData.pickable=true;road.userData.ref={kind:'road',k};roadMeshes.set(k,g); // Разметка
- if(type!=='dirt')box(.055,.125,.7,0xe8dca3,0,.07,0,g);
- refreshRoadJunctions(x,z);if(!free)refreshUI();
+function rebuild(){
+ for(const g of objects.values())scene.remove(g);objects.clear();occupied.clear();city.pop=0;
+ city.buildings.forEach(b=>{occupied.set(b.x+','+b.z,b.kind);buildingMesh(b.kind,b.x,b.z);if(defs[b.kind].pop)city.pop+=defs[b.kind].pop;});
+ updateUI();
 }
-function refreshRoadJunctions(x,z){for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1]]){const r=state.roads.find(v=>v.x===x+dx&&v.z===z+dz);if(r){const g=roadMeshes.get(r.k);if(g){/* плитки стыкуются без щелей, перекрёсток визуально автоматический */}}}}
-function placeZone(x,z,type,free=false){x=clamp(x,0,W-1);z=clamp(z,0,H-1);const k=key(x,z);if(state.zones.some(v=>v.k===k)||state.roads.some(v=>v.k===k))return;if(!hasAdjacentRoad(x,z)){toast('Зона должна примыкать к дороге');return}if(!free&&!pay(TYPES[type].price))return;state.zones.push({k,x,z,type,age:0});const p=worldPos(x,z),g=groupAt(p.x,groundY(x,z)+.06,p.z);const m=box(1.6,.035,1.6,TYPES[type].color,0,0,0,g);m.material.transparent=true;m.material.opacity=.38;m.userData.pickable=true;m.userData.ref={kind:'zone',k};zoneMeshes.set(k,g);if(!free)refreshUI()}
-function hasAdjacentRoad(x,z){return state.roads.some(r=>Math.abs(r.x-x)+Math.abs(r.z-z)<=2)}
-function placeBuilding(x,z,type,free=false){const k=key(x,z);if(state.buildings.some(b=>b.k===k)||state.roads.some(r=>r.k===k)||state.zones.some(a=>a.k===k)){toast('Здесь уже занято');return}if(!free&&!pay(TYPES[type].price))return;const b={id:state.serial++,k,x,z,type,level:1,age:0,people:0,workers:0};state.buildings.push(b);renderBuilding(b,true);if(!free){addNews('Построено: '+TYPES[type].name);refreshUI()}}
-function renderBuilding(b,bounce=false){const p=worldPos(b.x,b.z),g=groupAt(p.x,groundY(b.x,b.z)+.08,p.z);g.userData.ref={kind:'building',id:b.id};const palette={res:[0xf2c66d,0x72b6d9,0xf0a07c,0xd8dce6],com:[0x5c9fe8,0x4b83bd,0xf2b84b,0x9b83d9],ind:[0xc4a45b,0x8b9b9f,0xc98a4b,0x9eacb5],office:[0x61c4c8,0x5ba5c4,0x7ca9d6,0x86d3c5]};const type=b.type,level=b.level||1,color=palette[type][(b.id*7)%4];let h=(type==='res'?1.6:type==='com'?2.2:type==='ind'?1.4:2.8)*(.8+level*.45);
- const w=type==='ind'?1.6:1.35,d=type==='res'?1.35:1.55;
- box(w,h,d,color,0,h/2,0,g);
- // Крыша с ярким акцентом
- box(w+.12,.14,d+.12,level>2?0x4b667c:0x43576a,0,h+.05,0,g);
- // Окна спереди и сбоку
- const windowColor=dayLight<.28?0xffd878:0x9be3ed;
- for(let yy=.45;yy<h-.1;yy+=.48){for(let xx=-w/2+.22;xx<w/2;xx+=.4){box(.18,.22,.025,windowColor,xx,yy,d/2+.014,g)}}
- for(let yy=.45;yy<h-.1;yy+=.48)box(.025,.22,.18,windowColor,w/2+.014,yy,0,g);
- box(.28,.45,.035,0x80543b,0,.25,d/2+.025,g);
- if(type==='ind'){cylinder(.12,.15,.65,0x78858a,-.35,h+.38,-.3,g,8);cylinder(.08,.11,.45,0x9ba8ab,.35,h+.28,.2,g,8)}
- if(type==='res'&&level>1)sphere(.18,0x58b86c,0,h+.22,0,g);
- g.traverse(o=>{if(o.isMesh){o.userData.pickable=true;o.userData.ref={kind:'building',id:b.id}}});
- if(bounce){g.scale.setScalar(.05);effects.push({type:'bounce',obj:g,t:0,duration:.35})}
- buildingMeshes.set(b.id,g);
+const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();let dragging=false,downX=0,downY=0,lastX=0,lastY=0;
+function pick(e){const r=renderer.domElement.getBoundingClientRect();pointer.x=(e.clientX-r.left)/r.width*2-1;pointer.y=-((e.clientY-r.top)/r.height*2-1);raycaster.setFromCamera(pointer,camera);const hits=raycaster.intersectObjects(tiles,false);if(hits.length){const u=hits[0].object.userData;placeAt(u.x,u.z);}}
+function placeAt(x,z){const key=x+','+z;if(city.selected==='bulldoze'){if(!occupied.has(key)){toast('Здесь нечего сносить');return;}const kind=occupied.get(key);city.money+=Math.floor(defs[kind].cost*.35);city.buildings=city.buildings.filter(b=>!(b.x===x&&b.z===z));rebuild();toast('Объект снесён · часть стоимости возвращена');return;}addBuilding(city.selected,x,z);}
+renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;downX=lastX=e.clientX;downY=lastY=e.clientY;renderer.domElement.setPointerCapture?.(e.pointerId);});
+renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;const dx=e.clientX-lastX,dy=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;if(Math.hypot(e.clientX-downX,e.clientY-downY)>8){camera.position.x-=dx*.018;camera.position.z-=dy*.018;camera.lookAt(0,0,0);}});
+renderer.domElement.addEventListener('pointerup',e=>{if(!dragging)return;dragging=false;if(Math.hypot(e.clientX-downX,e.clientY-downY)<8)pick(e);});
+function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',1800);}
+function fmt(n){return Math.round(n).toLocaleString('ru-RU');}
+function updateUI(){
+ $('balance').textContent='₡ '+fmt(city.money);$('balance').classList.toggle('negative',city.money<0);$('population').textContent=fmt(city.pop);
+ const monthly=city.buildings.reduce((s,b)=>s+(defs[b.kind].tax||0)-(defs[b.kind].upkeep||0),0);
+ $('income').textContent=(monthly>=0?'+':'−')+'₡ '+fmt(Math.abs(monthly));$('dateLine').textContent='День '+city.day+' · '+['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'][(Math.floor((city.day-1)/30))%12];
 }
-function growZone(z){const road=hasAdjacentRoad(z.x,z.z);if(!road)return;const power=state.buildings.some(b=>['power'].includes(b.type)),water=state.buildings.some(b=>b.type==='water');if(!power||!water)return;if(seeded(z.x+state.day,z.z+state.pop)>.75){const b={id:state.serial++,k:z.k,x:z.x,z:z.z,type:z.type,level:1,age:0,people:0,workers:0};state.buildings.push(b);renderBuilding(b,true);const idx=state.zones.findIndex(a=>a.k===z.k);if(idx>=0){const m=zoneMeshes.get(z.k);if(m){scene.remove(m);zoneMeshes.delete(z.k)}state.zones.splice(idx,1)}}}
-function demolishAt(x,z){const k=key(x,z);const r=state.roads.findIndex(v=>v.k===k);if(r>=0){state.roads.splice(r,1);const m=roadMeshes.get(k);if(m)scene.remove(m);roadMeshes.delete(k);toast('Дорога удалена');refreshUI();return}const zi=state.zones.findIndex(v=>v.k===k);if(zi>=0){state.zones.splice(zi,1);const m=zoneMeshes.get(k);if(m)scene.remove(m);zoneMeshes.delete(k);refreshUI();return}const bi=state.buildings.findIndex(v=>v.k===k);if(bi>=0){const b=state.buildings[bi];state.money+=Math.round((TYPES[b.type]?.price||100)*.25);const m=buildingMeshes.get(b.id);if(m)scene.remove(m);buildingMeshes.delete(b.id);state.buildings.splice(bi,1);addNews('Здание снесено. Часть стоимости возвращена.');refreshUI();return}toast('Здесь нечего сносить')}
-function showObject(ref){if(!ref)return;if(ref.kind==='building'){const b=state.buildings.find(v=>v.id===ref.id);if(!b)return;selectedObject=b;const t=TYPES[b.type];$('modal').innerHTML=`<h2>${t.name}</h2><p>Уровень: ${b.level||1}</p><p>Статус: ${hasAdjacentRoad(b.x,b.z)?'🟢 Есть доступ к дороге':'🔴 Нет дороги'}<br>Электричество: ${state.buildings.some(x=>x.type==='power')?'🟢 Сеть работает':'🔴 Нет электричества'}<br>Вода: ${state.buildings.some(x=>x.type==='water')?'🟢 Водоснабжение есть':'🔴 Нет воды'}</p><p>${t.desc||'Городское здание.'}</p><div class="actions"><button id="upgrade">⬆ Улучшить · ₡${format(350*b.level)}</button><button id="demolish">Снести</button><button id="close">Закрыть</button></div>`;$('modal').style.display='block';$('upgrade').onclick=()=>{const cost=350*b.level;if(pay(cost)){b.level++;const old=buildingMeshes.get(b.id);if(old)scene.remove(old);renderBuilding(b,true);addNews('Здание улучшено до уровня '+b.level);showObject({kind:'building',id:b.id});refreshUI()}};$('demolish').onclick=()=>{demolishAt(b.x,b.z);$('modal').style.display='none'};$('close').onclick=()=>{$('modal').style.display='none'};return}if(ref.kind==='road'){const r=state.roads.find(v=>v.k===ref.k);if(r)toast(TYPES[r.type].name+' • содержание '+(TYPES[r.type].maint||0)+' ₡/мес.')}else if(ref.kind==='zone'){const z=state.zones.find(v=>v.k===ref.k);if(z)toast(TYPES[z.type].name+' • ожидает застройки')}}
-function showBudget(){const bal=calcBalance();$('modal').innerHTML=`<h2>💰 Экономика города</h2><p>Доходы: <b style="color:#69d4b2">₡${format(calcIncome())}/мес.</b></p><p>Расходы: <b style="color:#ff8e8e">₡${format(calcExpenses())}/мес.</b></p><p>Баланс: <b>${bal>=0?'+':''}₡${format(bal)}</b></p><p>Налог на жильё: ${state.taxes.res}% <input id="taxres" type="range" min="5" max="20" value="${state.taxes.res}" style="width:100%"></p><p>Налог на магазины: ${state.taxes.com}% <input id="taxcom" type="range" min="5" max="20" value="${state.taxes.com}" style="width:100%"></p><p>Налог на промышленность: ${state.taxes.ind}% <input id="taxind" type="range" min="5" max="20" value="${state.taxes.ind}" style="width:100%"></p><div class="actions"><button id="close">Готово</button></div>`;$('modal').style.display='block';['res','com','ind'].forEach(k=>{$('tax'+k).oninput=e=>{state.taxes[k]=+e.target.value;showBudget()}});$('close').onclick=()=>$('modal').style.display='none'}
-function pay(amount){if(state.money<amount){toast('Недостаточно средств!');return false}state.money-=amount;return true}
-// ─── Economy / Citizens / Simulation ────────────────────────────────────────
-function calcIncome(){let income=0;for(const b of state.buildings){if(b.type==='res')income+=65*state.taxes.res/10;if(b.type==='com')income+=105*state.taxes.com/10;if(b.type==='ind')income+=120*state.taxes.ind/10;if(b.type==='office')income+=135}income+=state.pop*.7;return income}
-function calcExpenses(){let total=0;for(const r of state.roads)total+=TYPES[r.type].maint||0;for(const b of state.buildings)total+=TYPES[b.type]?.maint||0;return total}
-function calcBalance(){return calcIncome()-calcExpenses()}
-function simulate(dt){if(state.speed===0)return;simAccum+=dt*state.speed;while(simAccum>=1){simAccum-=1;state.hour++;if(state.hour>=24){state.hour=0;state.day++;dailyTick()}if(state.day>30){state.day=1;state.month++;if(state.month>12){state.month=1;state.year++}state.money+=calcBalance();if(state.money<0)addNews('Бюджет ушёл в минус! Сократи расходы или расширь налоговую базу.');if(state.month===1)addNews('Наступил новый год. Подведи итоги развития города.')}if(state.hour===8&&Math.random()<.06&&state.buildings.length>3)addNews(['Жители просят больше парков 🌳','На дорогах стало оживлённее 🚗','Горожане обсуждают новый район 🏘','Мэрия напоминает следить за бюджетом 💰'][Math.floor(Math.random()*4)]);}}
-function dailyTick(){for(const z of [...state.zones])growZone(z);state.pop=state.buildings.reduce((sum,b)=>sum+(b.type==='res'?Math.round(8*(b.level||1)):0),0);state.happiness=clamp(60+state.buildings.filter(b=>b.type==='park').length*3-state.buildings.filter(b=>b.type==='ind').length*2,15,98);state.demand.res=clamp(75-state.buildings.filter(b=>b.type==='res').length*5+Math.round((state.happiness-60)*.6),5,100);state.demand.com=clamp(55-state.buildings.filter(b=>b.type==='com').length*7+Math.floor(state.pop/12),5,100);state.demand.ind=clamp(65-state.buildings.filter(b=>b.type==='ind').length*6+Math.floor(state.pop/20),5,100);if(state.day%5===0)autosaveGame();refreshUI()}
-function refreshUI(){const bal=calcBalance();$('money').textContent='₡ '+format(state.money);$('balance').textContent='Баланс '+(bal>=0?'+':'−')+'₡'+format(Math.abs(bal))+'/мес.';$('balance').style.color=bal>=0?'#69d4b2':'#ff8e8e';$('population').textContent='👥 '+format(state.pop);$('date').textContent=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'][state.month-1]+', год '+state.year;$('clock').textContent=String(state.hour).padStart(2,'0')+':00';$('r').style.height=state.demand.res+'%';$('c').style.height=state.demand.com+'%';$('i').style.height=state.demand.ind+'%';}
-function setSpeed(n){state.speed=n;document.querySelectorAll('#speed button').forEach(b=>b.classList.toggle('active',+b.dataset.speed===n));}
-function dayNight(){const t=(state.hour/24)*Math.PI*2;dayLight=.2+.8*Math.max(0,Math.sin(t-Math.PI/2));const col=new THREE.Color().setHSL(.55,.38,.18+dayLight*.55);scene.background=col;scene.fog.color.copy(col);scene.traverse(o=>{if(o.isMesh&&o.material&&o.material.emissive){}})}
-// ─── UI / Save ───────────────────────────────────────────────────────────────
-function buildUI(){const tools=$('tools'),cards=$('cards');CATEGORIES.forEach(([id,label])=>{const b=document.createElement('button');b.className='tool'+(id===activeCategory?' active':'');b.textContent=label;b.onclick=()=>{activeCategory=id;document.querySelectorAll('.tool').forEach(v=>v.classList.toggle('active',v===b));renderCards()};tools.appendChild(b)});renderCards();document.querySelectorAll('#speed button').forEach(b=>b.onclick=()=>setSpeed(+b.dataset.speed));$('settings').onclick=()=>{ $('modal').innerHTML='<h2>⚙ Настройки города</h2><p>Прогресс сохраняется автоматически каждые несколько игровых дней.</p><p>Управление: один палец — перемещение камеры или рисование дороги/зоны; щипок — масштаб; два пальца — поворот.</p><div class="actions"><button id="saveNow">Сохранить</button><button id="loadNow">Загрузить</button><button id="newNow">Новая игра</button><button id="close">Закрыть</button></div>';$('modal').style.display='block';$('saveNow').onclick=saveGame;$('loadNow').onclick=loadGame;$('newNow').onclick=()=>{if(confirm('Сбросить город?'))newGame()};$('close').onclick=()=>$('modal').style.display='none'};}
-function renderCards(){const cards=$('cards');cards.innerHTML='';const ids=CATEGORIES.find(c=>c[0]===activeCategory)?.[2]||[];ids.forEach(id=>{const b=document.createElement('button');if(id==='bulldoze'){b.innerHTML='<b>🧹 Снос</b><small>Удалить объект</small>'}else if(id==='budget'){b.innerHTML='<b>💰 Бюджет</b><small>Налоги и баланс</small>'}else if(id==='save'){b.innerHTML='<b>💾 Сохранить</b><small>Записать город</small>'}else if(id==='load'){b.innerHTML='<b>📂 Загрузить</b><small>Продолжить игру</small>'}else if(id==='new'){b.innerHTML='<b>🔄 Новый город</b><small>Начать сначала</small>'}else{const t=TYPES[id];b.innerHTML=`<b>${({road:'🛣',dirt:'🟤',avenue:'🚘',res:'🟩',com:'🟦',ind:'🟨',office:'🟦',power:'☀️',water:'💧',park:'🌳',fire:'🚒',school:'🏫'})[id]} ${t.name}</b><small>₡${format(t.price)}${t.maint?' • ₡'+t.maint+'/мес.':''}</small>`}b.className=id===activeTool?'active':'';b.onclick=()=>{if(id==='budget'){showBudget();return}if(id==='save'){saveGame();return}if(id==='load'){loadGame();return}if(id==='new'){if(confirm('Начать новый город?'))newGame();return}activeTool=id;document.querySelectorAll('#cards button').forEach(v=>v.classList.toggle('active',v===b));$('hint').textContent=TYPES[id]?.kind==='road'?'Проводи пальцем по карте, чтобы рисовать дорогу':TYPES[id]?.kind==='zone'?'Проводи пальцем по карте рядом с дорогой, чтобы зонировать':'Коснись свободного места на карте для строительства'};cards.appendChild(b)});}
-function serializable(){return {...state,selected:null}}
-function saveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(serializable()));$('modal').style.display='none';toast('Город сохранён на этом устройстве 💾')}catch(e){toast('Не удалось сохранить игру')}}
-function autosaveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(serializable()))}catch(e){}}
-function clearWorldObjects(){for(const m of [...roadMeshes.values(),...zoneMeshes.values(),...buildingMeshes.values()])scene.remove(m);roadMeshes.clear();zoneMeshes.clear();buildingMeshes.clear()}
-function loadGame(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw){toast('Сохранение не найдено');return}const data=JSON.parse(raw);clearWorldObjects();Object.assign(state,data);state.selected=null;state.roads.forEach(r=>placeRoad(r.x,r.z,r.type,true));state.zones.forEach(z=>{const p=worldPos(z.x,z.z),g=groupAt(p.x,groundY(z.x,z.z)+.06,p.z),m=box(1.6,.035,1.6,TYPES[z.type].color,0,0,0,g);m.material.transparent=true;m.material.opacity=.38;m.userData.pickable=true;m.userData.ref={kind:'zone',k:z.k};zoneMeshes.set(z.k,g)});state.buildings.forEach(b=>renderBuilding(b));$('modal').style.display='none';refreshUI();toast('Город загружен');}catch(e){toast('Сохранение повреждено или несовместимо')}}
-function newGame(){clearWorldObjects();state.money=12000;state.day=1;state.month=5;state.year=1;state.hour=8;state.speed=1;state.pop=0;state.happiness=72;state.taxes={res:9,com:10,ind:11};state.roads=[];state.zones=[];state.buildings=[];state.serial=1;state.demand={res:70,com:45,ind:55};initStartingTown();$('modal').style.display='none';refreshUI();setSpeed(1);addNews('Новый город основан. Построй электростанцию и водонапорную башню!')}
-function initStartingTown(){for(let x=17;x<=25;x++)placeRoad(x,24,'road',true);for(let z=21;z<=27;z++)placeRoad(21,z,'road',true);for(let x=17;x<26;x+=2)placeZone(x,22,'res',true)}
-// ─── Main loop: симуляция отдельно от отрисовки ──────────────────────────────
-let last=performance.now();
-function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-last)/1000,.05);last=now;simulate(dt);dayNight();for(let i=effects.length-1;i>=0;i--){const e=effects[i];e.t+=dt;const k=clamp(e.t/e.duration,0,1);if(e.type==='bounce'){const s=k<.7?(.05+.95*(k/.7)):(1+.08*Math.sin((k-.7)/.3*Math.PI)*(1-k));e.obj.scale.setScalar(s)}if(k>=1){if(e.type==='bounce')e.obj.scale.setScalar(1);effects.splice(i,1)}}camTarget.x=clamp(camTarget.x,-42,42);camTarget.z=clamp(camTarget.z,-42,42);renderer.render(scene,camera)}
-// ─── Запуск ─────────────────────────────────────────────────────────────────
-try{init3D();buildUI();refreshUI();if(localStorage.getItem(SAVE_KEY))addNews('Добро пожаловать! Можно загрузить предыдущее сохранение через меню.');else addNews('Добро пожаловать, мэр! Начни с электростанции и водонапорной башни.');requestAnimationFrame(animate);setInterval(()=>{if(state.speed!==0){state.hour=(state.hour+1)%24;if(state.hour===0){state.day++;dailyTick()}refreshUI()}},8000); }catch(err){console.error(err);$('news').textContent='Не удалось запустить 3D. Проверь подключение к интернету и перезагрузи страницу.'}
+function renderItems(cat){
+ currentCat=cat;$('tabs').querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.cat===cat));
+ const items=Object.entries(defs).filter(([k,d])=>d.cat===cat);if(cat==='roads')items.push(['bulldoze',{name:'Сносить',icon:'🧹',cost:0,upkeep:0,cat:'roads',type:'bulldoze'}]);
+ $('items').innerHTML='';items.forEach(([k,d])=>{const b=document.createElement('button');b.className='item'+(city.selected===k?' selected':'');b.innerHTML='<b>'+d.icon+' '+d.name+'</b><small>'+(k==='bulldoze'?'Возврат части стоимости':'₡ '+fmt(d.cost)+' · ₡ '+fmt(d.upkeep)+'/мес.')+'</small>';b.onclick=()=>{city.selected=k;renderItems(cat);$('hint').textContent=k==='bulldoze'?'Коснись здания, чтобы снести его':'Выбрано: '+d.name+' · коснись свободной клетки';};$('items').appendChild(b);});
+}
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-cat]');if(b)renderItems(b.dataset.cat);});
+$('pauseBtn').onclick=()=>{city.paused=!city.paused;$('pauseBtn').textContent=city.paused?'▶':'Ⅱ';toast(city.paused?'Игра на паузе':'Игра продолжается');};
+$('speedBtn').onclick=()=>{city.speed=city.speed===1?2:city.speed===2?3:1;$('speedBtn').textContent='×'+city.speed;};
+function save(){const data={money:city.money,day:city.day,buildings:city.buildings};localStorage.setItem('gorodSNullaSaveV2',JSON.stringify(data));toast('Прогресс сохранён');}
+function load(){try{const raw=localStorage.getItem('gorodSNullaSaveV2');if(!raw){toast('Сохранение пока не найдено');return;}const d=JSON.parse(raw);city.money=Number(d.money)||0;city.day=Number(d.day)||1;city.buildings=Array.isArray(d.buildings)?d.buildings.filter(b=>defs[b.kind]&&Number.isInteger(b.x)&&Number.isInteger(b.z)&&b.x>=0&&b.z>=0&&b.x<N&&b.z<N):[];rebuild();toast('Сохранение загружено');}catch(e){toast('Не удалось загрузить сохранение');}}
+$('settingsBtn').onclick=()=>{$('modalTitle').textContent='Город и сохранение';$('modalBody').innerHTML='<p>Прогресс хранится в памяти этого браузера на устройстве.</p><button class="iconbtn wide" id="saveBtn">💾 Сохранить город</button><button class="iconbtn wide" id="loadBtn">📂 Загрузить сохранение</button><button class="iconbtn wide" id="resetBtn">↻ Начать заново</button><p>Подсказка: доход рассчитывается по жилью и расходам городских служб. Строй дороги и дома, чтобы развивать город.</p>'; $('modal').classList.add('show');$('saveBtn').onclick=save;$('loadBtn').onclick=load;$('resetBtn').onclick=()=>{if(confirm('Начать заново? Текущее состояние будет заменено.')){city.money=12000;city.day=1;city.buildings=[];rebuild();localStorage.removeItem('gorodSNullaSaveV2');toast('Новый город создан');}};};
+$('closeModal').onclick=()=>$('modal').classList.remove('show');$('modal').addEventListener('click',e=>{if(e.target===$('modal'))$('modal').classList.remove('show');});
+function tick(){if(!city.paused){city.monthTimer+=.016*city.speed;if(city.monthTimer>=8){city.monthTimer=0;city.day+=30;const net=city.buildings.reduce((s,b)=>s+(defs[b.kind].tax||0)-(defs[b.kind].upkeep||0),0);city.money+=net;updateUI();if(city.money<0)toast('Внимание: бюджет отрицательный');}}}
+function animate(){requestAnimationFrame(animate);tick();renderer.render(scene,camera);} 
+function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);}
+addEventListener('resize',resize);camera.lookAt(0,0,0);renderItems('roads');updateUI();
+try{const raw=localStorage.getItem('gorodSNullaSaveV2');if(raw){const d=JSON.parse(raw);city.money=Number(d.money)||12000;city.day=Number(d.day)||1;city.buildings=Array.isArray(d.buildings)?d.buildings.filter(b=>defs[b.kind]&&b.x>=0&&b.z>=0&&b.x<N&&b.z<N):[];rebuild();}}catch(e){}
+animate();
 })();
 </script>
 </body>
